@@ -227,6 +227,87 @@ TestFramework.test("Deve registrar voto nulo ao confirmar voto com número invá
     TestFramework.assertEquals(votosDepois.total, votosAntes.total + 1);
 });
 
+//Testes de Cadastro
+
+TestFramework.test("Deve adicionar uma chapa corretamente ao cadastrarChapa", function() {
+    localStorage.clear();
+    const chapa = { numero: "15", nomePresidente: "Carlos", nomeVice: "Lucia", nomeChapa: "Renovação", foto: "base64img" };
+    const resultado = cadastrarChapa(chapa);
+    const chapasSalvas = StorageManager.obterChapas();
+    TestFramework.assertTrue(resultado);
+    TestFramework.assertEquals(chapasSalvas.length, 1);
+    TestFramework.assertEquals(chapasSalvas[0].numero, "15");
+});
+
+TestFramework.test("Não deve adicionar chapa com número repetido ao cadastrarChapa", function() {
+    localStorage.clear();
+    const chapa1 = { numero: "15", nomePresidente: "Carlos", nomeVice: "Lucia", nomeChapa: "Renovação", foto: "base64img" };
+    const chapa2 = { numero: "15", nomePresidente: "Ana", nomeVice: "Pedro", nomeChapa: "Avanço", foto: "base64img" };
+    cadastrarChapa(chapa1);
+    const resultado = cadastrarChapa(chapa2);
+    TestFramework.assertFalse(resultado);
+    const chapasSalvas = StorageManager.obterChapas();
+    TestFramework.assertEquals(chapasSalvas.length, 1);
+});
+
+TestFramework.test("Deve retornar erro se dados obrigatórios não forem preenchidos ao cadastrarChapa", function() {
+    const chapaIncompleta = { numero: "", nomePresidente: "", nomeVice: "", nomeChapa: "", foto: "" };
+    const resultado = cadastrarChapa(chapaIncompleta);
+    TestFramework.assertFalse(resultado);
+});
+
+//Teste de Votação
+
+TestFramework.test("Deve incrementar a contagem corretamente na votação em chapa válida", function() {
+    localStorage.clear();
+    const chapa = { numero: "12", nomePresidente: "Ana", nomeVice: "Beto", nomeChapa: "Mudança", foto: "base64img" };
+    StorageManager.salvarChapas([chapa]);
+    const votosAntes = StorageManager.obterVotos();
+
+    votarEmChapa("12");
+    const votosDepois = StorageManager.obterVotos();
+    
+    TestFramework.assertEquals(votosDepois.chapas["12"], votosAntes.chapas["12"] + 1);
+});
+
+TestFramework.test("Deve contar como voto nulo ao votar em chapa inválida", function() {
+    localStorage.clear();
+    const votosAntes = StorageManager.obterVotos();
+
+    votarEmChapa("99");
+    const votosDepois = StorageManager.obterVotos();
+
+    TestFramework.assertEquals(votosDepois.nulos, votosAntes.nulos + 1);
+});
+
+TestFramework.test("Deve aumentar a contagem de votos brancos ao votar em branco", function() {
+    localStorage.clear();
+    const votosAntes = StorageManager.obterVotos();
+
+    votarEmBranco();
+    const votosDepois = StorageManager.obterVotos();
+
+    TestFramework.assertEquals(votosDepois.brancos, votosAntes.brancos + 1);
+});
+
+TestFramework.test("Deve exibir os resultados ao finalizar a votação", function() {
+    localStorage.clear();
+    const chapa1 = { numero: "12", nomePresidente: "Ana", nomeVice: "Beto", nomeChapa: "Mudança", foto: "base64img" };
+    const chapa2 = { numero: "13", nomePresidente: "João", nomeVice: "Clara", nomeChapa: "Progresso", foto: "base64img" };
+    StorageManager.salvarChapas([chapa1, chapa2]);
+
+    votarEmChapa("12");
+    votarEmChapa("13");
+    votarEmBranco();
+    
+    const resultadoFinal = finalizarVotacao();
+    
+    TestFramework.assertEquals(resultadoFinal.chapas[0].numero, "12");
+    TestFramework.assertEquals(resultadoFinal.chapas[1].numero, "13");
+    TestFramework.assertEquals(resultadoFinal.brancos, 1);
+    TestFramework.assertEquals(resultadoFinal.nulos, 0);
+});
+
 window.addEventListener('load', function () {
     TestFramework.runTests();
 });
