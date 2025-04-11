@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Chapas - Urna DCE</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="urna-container">
+        <header class="urna-header">
+            <h1>CADASTRO DE CHAPAS</h1>
+        </header>
+
+        <div class="urna-cadastro-container">
+            <form id="form-cadastro-chapa" class="urna-cadastro-form">
+                <div class="urna-form-group">
+                    <label for="numero-chapa">Número da Chapa (2 dígitos):</label>
+                    <input type="text" id="numero-chapa" maxlength="2" pattern="[0-9]{2}" required>
+                </div>
+
+                <div class="urna-form-group">
+                    <label for="nome-presidente">Nome do Presidente:</label>
+                    <input type="text" id="nome-presidente" required>
+                </div>
+
+                <div class="urna-form-group">
+                    <label for="nome-vice">Nome do Vice-Presidente:</label>
+                    <input type="text" id="nome-vice" required>
+                </div>
+
+                <div class="urna-form-group">
+                    <label for="nome-chapa">Nome da Chapa:</label>
+                    <input type="text" id="nome-chapa" required>
+                </div>
+
+                <div class="urna-form-group">
+                    <label for="foto-chapa">Foto da Chapa:</label>
+                    <input type="file" id="foto-chapa" accept="image/*">
+                    <div class="urna-image-preview" id="image-preview">
+                        <span>Nenhuma imagem selecionada</span>
+                    </div>
+                </div>
+
+                <div class="urna-form-buttons">
+                    <button type="submit" class="urna-button confirmar">Cadastrar Chapa</button>
+                    <button type="button" class="urna-button cancelar" id="btn-cancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="urna-lista-chapas">
+            <h3>Chapas Cadastradas</h3>
+            <div class="urna-table-container">
+                <table id="tabela-chapas">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Chapa</th>
+                            <th>Presidente</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-chapas"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-confirmacao" class="urna-modal">
+        <div class="urna-modal-content">
+            <span class="urna-close-modal">&times;</span>
+            <h3 id="modal-titulo">Confirmar Cadastro</h3>
+            <p id="modal-mensagem">Deseja realmente cadastrar esta chapa?</p>
+            <div class="urna-modal-buttons">
+                <button id="btn-modal-confirmar" class="urna-button confirmar">Confirmar</button>
+                <button id="btn-modal-cancelar" class="urna-button cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/cadastro.js"></script>
+</body>
+</html>

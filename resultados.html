@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados - Urna Eletrônica DCE</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <header class="urna-header">
+        <h1>RESULTADOS DA ELEIÇÃO</h1>
+    </header>
+
+    <div class="resultados-container">
+        <div class="resultados-header">
+            <h2>Apuração de Votos</h2>
+            <p>Relatório consolidado da votação</p>
+        </div>
+
+        <table class="resultados-tabela">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Chapa</th>
+                    <th>Presidente</th>
+                    <th>Votos</th>
+                    <th>Porcentagem</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-resultados"></tbody>
+        </table>
+
+        <div class="resultados-totais">
+            <h3>Totais Gerais</h3>
+            <div class="totais-grid">
+                <div><strong>Votos Válidos:</strong> <span id="total-validos">0</span></div>
+                <div><strong>Votos Brancos:</strong> <span id="total-brancos">0</span></div>
+                <div><strong>Votos Nulos:</strong> <span id="total-nulos">0</span></div>
+                <div><strong>Total de Votos:</strong> <span id="total-geral">0</span></div>
+            </div>
+        </div>
+
+        <div class="grafico-container">
+            <h3>Distribuição dos Votos</h3>
+            <div class="grafico-barra" id="grafico-barras"></div>
+        </div>
+
+        <button class="btn-imprimir" onclick="window.print()">Imprimir Resultados</button>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultados = StorageManager.obterResultados();
+            const tabela = document.getElementById('tabela-resultados');
+            const grafico = document.getElementById('grafico-barras');
+            
+            const chapasOrdenadas = resultados.chapas.sort((a, b) => b.votos - a.votos);
+            
+            const votosValidos = chapasOrdenadas.reduce((sum, chapa) => sum + chapa.votos, 0);
+            const totalGeral = votosValidos + resultados.brancos + resultados.nulos;
+            
+            chapasOrdenadas.forEach(chapa => {
+                const porcentagem = totalGeral > 0 ? 
+                    ((chapa.votos / totalGeral) * 100).toFixed(2) + '%' : '0%';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${chapa.numero}</td>
+                    <td>${chapa.nomeChapa}</td>
+                    <td>${chapa.nomePresidente}</td>
+                    <td>${chapa.votos}</td>
+                    <td>${porcentagem}</td>
+                `;
+                tabela.appendChild(row);
+            });
+            
+            document.getElementById('total-validos').textContent = votosValidos;
+            document.getElementById('total-brancos').textContent = resultados.brancos;
+            document.getElementById('total-nulos').textContent = resultados.nulos;
+            document.getElementById('total-geral').textContent = totalGeral;
+            
+            if (totalGeral > 0) {
+                const allResults = [
+                    ...chapasOrdenadas.map(chapa => ({
+                        label: chapa.numero,
+                        value: chapa.votos,
+                        type: 'valido'
+                    })),
+                    { label: 'Brancos', value: resultados.brancos, type: 'branco' },
+                    { label: 'Nulos', value: resultados.nulos, type: 'nulo' }
+                ];
+                
+                const maxValue = Math.max(...allResults.map(item => item.value));
+                
+                allResults.forEach(item => {
+                    const altura = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
+                    
+                    const barra = document.createElement('div');
+                    barra.className = 'barra';
+                    barra.style.height = `${altura}%`;
+                    barra.style.backgroundColor = item.type === 'valido' ? '#004c9e' : 
+                                                  item.type === 'branco' ? '#757474' : '#f44336';
+                    
+                    const label = document.createElement('div');
+                    label.className = 'barra-label';
+                    label.textContent = item.label;
+                    
+                    const value = document.createElement('div');
+                    value.className = 'barra-value';
+                    value.textContent = item.value;
+                    
+                    barra.appendChild(value);
+                    barra.appendChild(label);
+                    grafico.appendChild(barra);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

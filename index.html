@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Urna Eletrônica DCE</title>
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div class="urna-container">
+			<header class="urna-header">
+				<h1>URNA DCE</h1>
+			</header>
+
+			<div class="urna-display">
+				<div class="urna-info">
+					<h2>CANDIDATO</h2>
+					<div class="urna-input">
+						<label>NÚMERO:</label>
+						<div class="urna-number-input">
+							<input
+								type="text"
+								id="digito1"
+								maxlength="1"
+								readonly
+							/>
+							<input
+								type="text"
+								id="digito2"
+								maxlength="1"
+								readonly
+							/>
+						</div>
+					</div>
+
+					<div class="urna-candidate-info">
+						<div class="urna-info-row">
+							<label>NOME:</label>
+							<span id="candidate-name">---</span>
+						</div>
+						<div class="urna-info-row">
+							<label>VICE:</label>
+							<span id="vice-name">---</span>
+						</div>
+						<div class="urna-info-row">
+							<label>CHAPA:</label>
+							<span id="chapa-name">---</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="urna-image">
+					<img
+						id="candidate-image"
+						src="img/default.png"
+						alt="Foto do candidato"
+					/>
+				</div>
+			</div>
+
+			<div class="urna-keyboard">
+				<div class="urna-keyboard-row">
+					<button class="urna-key" data-value="1">1</button>
+					<button class="urna-key" data-value="2">2</button>
+					<button class="urna-key" data-value="3">3</button>
+				</div>
+				<div class="urna-keyboard-row">
+					<button class="urna-key" data-value="4">4</button>
+					<button class="urna-key" data-value="5">5</button>
+					<button class="urna-key" data-value="6">6</button>
+				</div>
+				<div class="urna-keyboard-row">
+					<button class="urna-key" data-value="7">7</button>
+					<button class="urna-key" data-value="8">8</button>
+					<button class="urna-key" data-value="9">9</button>
+				</div>
+				<div class="urna-keyboard-row">
+					<button class="urna-key" data-value="0">0</button>
+				</div>
+				<div class="urna-keyboard-row">
+					<button
+						class="urna-key special-key confirma"
+						data-action="confirma"
+					>
+						CONFIRMA
+					</button>
+				</div>
+				<div class="urna-keyboard-row">
+					<button
+						class="urna-key special-key corrige"
+						data-action="corrige"
+					>
+						CORRIGE
+					</button>
+					<button class="urna-key special-key" data-action="branco">
+						BRANCO
+					</button>
+				</div>
+			</div>
+
+			<div class="urna-instructions">
+				<p>
+					<span class="highlight-nulo">NULO</span>: Qualquer número
+					inexistente
+				</p>
+				<p>
+					<span class="highlight-branco">BRANCO</span>: Clique no
+					botão BRANCO
+				</p>
+				<p>
+					<span class="highlight-corrige">CORRIGE</span>: Para
+					corrigir o voto
+				</p>
+				<p>
+					<span class="highlight-confirma">CONFIRMA</span>: Para
+					confirmar seu voto
+				</p>
+			</div>
+		</div>
+
+        <div id="modal-confirmacao" class="urna-modal">
+            <div class="urna-modal-content">
+              <h3 id="modal-titulo">Confirmar Voto</h3>
+              <div id="modal-candidate-info">
+                <p>Número: <span id="modal-numero"></span></p>
+                <p>Chapa: <span id="modal-chapa"></span></p>
+                <p>Presidente: <span id="modal-presidente"></span></p>
+              </div>
+              <div class="urna-modal-buttons">
+                <button id="btn-confirmar-voto" class="urna-button confirmar">CONFIRMAR</button>
+                <button id="btn-corrigir-voto" class="urna-button corrige">CORRIGIR</button>
+              </div>
+            </div>
+          </div>
+
+		<div id="admin-modal" class="urna-modal">
+			<div class="urna-modal-content">
+				<span class="urna-close-modal">&times;</span>
+				<h3>Acesso Administrativo</h3>
+				<input
+					type="password"
+					id="admin-password"
+					placeholder="Senha de acesso"
+				/>
+				<button id="btn-admin-submit">Acessar</button>
+			</div>
+		</div>
+
+		<script src="js/app.js"></script>
+		<script src="js/teclado.js"></script>
+		<script src="js/storage.js"></script>
+		<script src="js/votacao.js"></script>
+	</body>
+</html>
