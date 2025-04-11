@@ -48,4 +48,8 @@ const TestFramework = {
     }
 };
 
+function limparLocalStorage() {
+    localStorage.clear();
+}
+
 window.TestFramework = TestFramework;
